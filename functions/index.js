@@ -2,6 +2,7 @@ const functions = require("firebase-functions");
 var FormData = require("form-data");
 const axios = require("axios");
 const fs = require("fs");
+const { remove_background } = require("./remove_background");
 
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -15,6 +16,10 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
   response.send("Hello from Firebase!");
 });
 
+exports.test_remove_background = functions.https.onCall(() => {
+  console.log("test_remove_background");
+});
+// Takes an image Url, removes the background then returns the new image as a base 64 string
 exports.removeBackground = functions.https.onCall(({ imageurl }, context) => {
   var bodyFormData = new FormData();
   const apiKey = "4e22a20ed93a49de9fd1b2abac402f3f";
@@ -41,10 +46,9 @@ exports.removeBackground = functions.https.onCall(({ imageurl }, context) => {
             "Error: There was an error not caught by exception but here you go",
         };
       }
-      fs.writeFileSync(settings.outputImagePath, body);
+      // fs.writeFileSync(settings.outputImagePath, body);
       return {
         message: "Success",
-        data: body.toString("utf8"),
         response: response,
       };
     })
