@@ -46,15 +46,12 @@ exports.removeBackground = functions.https.onCall(({ imageurl }, context) => {
             "Error: There was an error not caught by exception but here you go",
         };
       }
-      // fs.writeFileSync(settings.outputImagePath, body);
       return {
         message: "Success",
         response: response,
       };
     })
     .catch(function (response) {
-      //handle error
-      console.log("Errrooooooooor", response);
       return response;
     });
 });
