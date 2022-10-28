@@ -29,7 +29,7 @@ exports.removeBackground = functions.https.onCall(({ imageurl }, context) => {
     imageurl: imageurl,
     outputImagePath: "output.jpg",
   };
-  bodyFormData.append("source_image_url", testImageUrl);
+  bodyFormData.append("source_image_url", imageurl);
   return axios({
     method: "post",
     url: settings.url,
@@ -38,20 +38,27 @@ exports.removeBackground = functions.https.onCall(({ imageurl }, context) => {
   })
     .then(function (response) {
       //handle success
+
       console.log(response);
       const body = response.data;
       if (response.statusCode != 200) {
-        return {
-          message:
-            "Error: There was an error not caught by exception but here you go",
-        };
+        throw new functions.https.HttpsError(
+          "Error: There was an error not caught by exception but here you go",
+          response.statusCode
+        );
       }
       return {
         message: "Success",
         response: response,
       };
     })
-    .catch(function (response) {
-      return response;
+    .catch(function (error) {
+      //handle error
+      console.log(error);
+      throw new functions.https.HttpsError(
+        "Error: There was an error not caught by exception but here you go",
+        error.message,
+        error
+      );
     });
 });
